@@ -32,7 +32,7 @@ public class EdingCncApiController : MonoBehaviour
     void Start()
     {
         TextMeshPos = gameObject.GetComponent<TextMeshPro>();
-        G_GetServer = new G_GetServer(EdingINIpath);
+        G_GetServer = new G_GetServer("");//ini file must not be set if the programs runs as a plugin
         G_GetServer.ConnectServer();
         G_StatusItemsposition = new G_StatusItemsposition(G_GetServer);
         g_JoggingFunctions = new G_JoggingFunctions(G_GetServer);
@@ -46,9 +46,28 @@ public class EdingCncApiController : MonoBehaviour
     }
     public void Connect(bool turnOn)
     {
+        if(_Connected == false)
+        {
+            CncRc rc = G_GetServer.ConnectServer();
+            if(rc == CncRc.CNC_RC_OK || rc == CncRc.CNC_RC_ALREADY_CONNECTED || rc == CncRc.CNC_RC_ALREADY_RUNS)
+            {
+                _Connected = true;
+            }
+            else
+            {
+                _Connected = false;
+            }
+        }
+        else
+        {
+            G_GetServer.CncDisConnectServer();
+            _Connected = false;
+        }
+
+        /*
         if (turnOn)
         {
-            try
+            try //no need for an try catch block.The only exception that can appear is that the 64-bit cncapi.dll is loaded in a 32-bit program or vice versa, but this applies to all api functions.
             {
                 if (_Connected)
                 {
@@ -69,7 +88,7 @@ public class EdingCncApiController : MonoBehaviour
             }
             catch { _Connected = false; }
         }
-
+        */
 
 
     }

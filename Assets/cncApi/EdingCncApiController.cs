@@ -46,7 +46,7 @@ public class EdingCncApiController : MonoBehaviour
     }
     public void Connect(bool turnOn)
     {
-        if(_Connected == false)
+        if(turnOn == true)
         {
             CncRc rc = G_GetServer.ConnectServer();
             if(rc == CncRc.CNC_RC_OK || rc == CncRc.CNC_RC_ALREADY_CONNECTED || rc == CncRc.CNC_RC_ALREADY_RUNS)
